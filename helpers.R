@@ -222,6 +222,17 @@ getData<-function(redcap_api_token) {
                                                           ifelse(myData_final$with_inelig_choice==3,
                                                                   "Participant Death",NA))))))
   
+    # myData_final$status_int<-ifelse(myData_final$consent_scrnfail==1,
+  #                                   "Screen Fail", 
+  #                                 ifelse(is.na(myData_final$with_inelig_choice)  & myData_final$consent_scrnfail==0,
+  #                                   "Actively Enrolled",
+  #                                   ifelse(myData_final$with_inelig_choice==1,
+  #                                     "Study Withdrawal",
+  #                                     ifelse(myData_final$with_inelig_choice==2,
+  #                                       "Study Ineligibility",
+  #                                       ifelse(myData_final$with_inelig_choice==3,
+  #                                         "Participant Death",NA)))))
+  
   myData_final$complete_study <- ifelse(is.na(myData_final$head_visit_comp_fu) | myData_final$head_visit_comp_fu==0,0,1)
   myData_final$status <- ifelse(myData_final$complete_study==1,"Completed Study",myData_final$status_int)
   
