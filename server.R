@@ -104,26 +104,8 @@ shinyServer(function(input,output,session) {
         #F/U compelted w/o LP
         visit_table[10,2] <- as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Completed w/o LP"])
         
-        #data <- visit_table
+        data <- visit_table
         
-        
-        
-        visit_df = data.frame("Category" = character(), "Number Participants" = integer())
-        visit_df[nrow(visit_df)+1,]=  c("Screened, No LP", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$base_class)["Screened, No LP"]))
-        visit_df[nrow(visit_df)+1,]=  c("Screened, LP Not Finished", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$base_class)["Screened, No LP"]))
-        visit_df[nrow(visit_df)+1,]=  c("Baseline Visit Completed", visit_table[4,2] <- as.numeric(table(data$base_visit_comp)["Yes"]))
-        
-        visit_df[nrow(visit_df)+1,]=  c("Withdrawn", as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study") & data$status=="Study Withdrawal",]$base_visit_comp)["Yes"]))
-        visit_df[nrow(visit_df)+1,]=  c("Lost to F/U", as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study", "Study Withdrawal"),]$base_visit_comp)["Yes"]))
-        visit_df[nrow(visit_df)+1,]=  c("F/U Started, Not Complete", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Started, Not Complete"]))
-        visit_df[nrow(visit_df)+1,]=  c("F/U compelted w/ LP", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Completed w/ LP"]))
-        visit_df[nrow(visit_df)+1,]=  c("F/U compelted w/o LP", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Completed w/o LP"]))
-        
-       data =visit_df %>%
-          knitr::kable("html", col.names = c(" ","Number Participants"), align = "r") %>%
-          kable_styling("striped", full_width = F) %>%
-          pack_rows(group_label = "Baseline", start_row = 1, end_row = 3, indent = F) %>%
-          pack_rows(group_label = "Followup", start_row = 4, end_row = 5, indent = F)
          
       }
       
