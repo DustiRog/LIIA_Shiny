@@ -40,7 +40,7 @@ shinyServer(function(input,output,session) {
   
   # The dataset to show/summarize, which is the raw data after filtering based
   # on user inputs
-  LIIA_abb<-ReactiveDf({
+  LIIA_abb<-reactive({
     
     # Add dependency on the update button (only update when button is clicked)
     input$updateBtn
@@ -121,7 +121,7 @@ shinyServer(function(input,output,session) {
         
        data = visit_df %>%
           kable("html", col.names = c(" ","Number Participants"), align = "r") %>%
-          kable_classic() %>%
+          kable_styling("striped", full_width = TRUE) %>%
           pack_rows(group_label = "Baseline", start_row = 1, end_row = 3, indent = F) %>%
           pack_rows(group_label = "Followup", start_row = 4, end_row = 5, indent = F)
         
