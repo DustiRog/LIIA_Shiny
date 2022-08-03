@@ -223,8 +223,12 @@ shinyServer(function(input,output,session) {
   # ======= SHOW DATA IN A TABLE ======= #
   
   # Show the data in a table
-  output$dataTable<-LIIA_abb()
-    
+  output$dataTable<-renderTable(
+    {
+      LIIA_abb()
+    },
+    include.rownames=FALSE
+  )
   
   # Allow user to download the data, simply save as .csv file
   output$downloadData<-downloadHandler(
