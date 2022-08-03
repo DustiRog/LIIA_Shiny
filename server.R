@@ -108,23 +108,21 @@ shinyServer(function(input,output,session) {
         
         
         
-        visit_df = data.frame("Category" = character(), "Number Participants" = integer()) %>%
-          rbind(visit_df, c("Screened, No LP", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$base_class)["Screened, No LP"]))) %>%
-          rbind(., c("Screened, LP Not Finished", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$base_class)["Screened, No LP"]))) %>%
-          rbind(., c("Baseline Visit Completed", visit_table[4,2] <- as.numeric(table(data$base_visit_comp)["Yes"]))) %>%
-          
-          rbind(., c("Withdrawn", as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study") & data$status=="Study Withdrawal",]$base_visit_comp)["Yes"]))) %>%
-          rbind(., c("Lost to F/U", as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study", "Study Withdrawal"),]$base_visit_comp)["Yes"]))) %>%
-          rbind(., c("F/U Started, Not Complete", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Started, Not Complete"]))) %>%
-          rbind(., c("F/U compelted w/ LP", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Completed w/ LP"]))) %>%
-          rbind(., c("F/U compelted w/o LP", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Completed w/o LP"])))
+        visit_df = data.frame("Category" = character(), "Number Participants" = integer())
+        visit_df[nrow(visit_df)+1,]=  c("-Baseline-","") 
+        visit_df[nrow(visit_df)+1,]=  c("Screened, No LP", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$base_class)["Screened, No LP"]))
+        visit_df[nrow(visit_df)+1,]=  c("Screened, LP Not Finished", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$base_class)["Screened, No LP"]))
+        visit_df[nrow(visit_df)+1,]=  c("Baseline Visit Completed", visit_table[4,2] <- as.numeric(table(data$base_visit_comp)["Yes"]))
         
-       data = visit_df %>%
-          kable(col.names = c(" ","Number Participants"), align = "r") %>%
-          kable_classic() %>%
-          pack_rows(group_label = "Baseline", start_row = 1, end_row = 3, indent = F) %>%
-          pack_rows(group_label = "Followup", start_row = 4, end_row = 5, indent = F)
+        visit_df[nrow(visit_df)+1,]=  c("-Followup-","") 
+        visit_df[nrow(visit_df)+1,]=  c("Withdrawn", as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study") & data$status=="Study Withdrawal",]$base_visit_comp)["Yes"]))
+        visit_df[nrow(visit_df)+1,]=  c("Lost to F/U", as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study", "Study Withdrawal"),]$base_visit_comp)["Yes"]))
+        visit_df[nrow(visit_df)+1,]=  c("F/U Started, Not Complete", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Started, Not Complete"]))
+        visit_df[nrow(visit_df)+1,]=  c("F/U compelted w/ LP", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Completed w/ LP"]))
+        visit_df[nrow(visit_df)+1,]=  c("F/U compelted w/o LP", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Completed w/o LP"]))
         
+       data = visit_df
+       
       }
       
       # Creates a list of the baseline and f/u status for each participant wither actively enrolled
