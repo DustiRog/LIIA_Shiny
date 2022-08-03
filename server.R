@@ -40,7 +40,7 @@ shinyServer(function(input,output,session) {
   
   # The dataset to show/summarize, which is the raw data after filtering based
   # on user inputs
-  LIIA_abb<-reactive({
+  LIIA_abb<-ReactiveDf({
     
     # Add dependency on the update button (only update when button is clicked)
     input$updateBtn
