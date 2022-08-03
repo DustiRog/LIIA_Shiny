@@ -119,15 +119,12 @@ shinyServer(function(input,output,session) {
         visit_df[nrow(visit_df)+1,]=  c("F/U compelted w/ LP", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Completed w/ LP"]))
         visit_df[nrow(visit_df)+1,]=  c("F/U compelted w/o LP", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Completed w/o LP"]))
         
-       data =
-         function(){
-         visit_df %>%
+       data =visit_df %>%
           knitr::kable("html", col.names = c(" ","Number Participants"), align = "r") %>%
           kable_styling("striped", full_width = F) %>%
           pack_rows(group_label = "Baseline", start_row = 1, end_row = 3, indent = F) %>%
           pack_rows(group_label = "Followup", start_row = 4, end_row = 5, indent = F)
-         }
-        
+         
       }
       
       # Creates a list of the baseline and f/u status for each participant wither actively enrolled
