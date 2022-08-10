@@ -32,7 +32,7 @@ getData<-function(redcap_api_token) {
   records_keepVars<-c("study_id","demo_first_name","demo_last_name","demo_dob","demo_phone",
                       "demo_email","demo_sex","demo_race___0","demo_race___1","demo_race___2",
                       "demo_race___3","demo_race___4","demo_race___5","demo_race___9",
-                      "demo_ethnicity","demo_handedness","demo_educ_yrs","with_inelig_choice",
+                      "demo_ethnicity","demo_handedness","demo_educ_yrs","with_inelig_choice","withd_consen_yesno", 
                       "with_inelig_dthdte","with_inelig_detail")
   
   # Records event: demographics and withdrawal/ineligibility
@@ -209,29 +209,31 @@ getData<-function(redcap_api_token) {
                                              lubridate::year(as.Date(myData_final$next_appt_date,origin="1970-01-01")))
   
   # Study status
-  myData_final$status_int<-ifelse(is.na(myData_final$with_inelig_choice) & myData_final$consent_scrnfail==0,
-                                    "Actively Enrolled",
-                                ifelse(is.na(myData_final$consent_scrnfail) & myData_final$with_inelig_choice==1,
-                                      "Study Withdrawal",
-                                      ifelse(myData_final$consent_scrnfail==0 & myData_final$with_inelig_choice==1,
-                                             "Study Withdrawal",
-                                            ifelse(myData_final$consent_scrnfail==1,
-                                                   "Screen Fail",
-                                                   ifelse(myData_final$with_inelig_choice==2,
-                                                           "Study Ineligibility",
-                                                          ifelse(myData_final$with_inelig_choice==3,
-                                                                  "Participant Death",NA))))))
-  
-    # myData_final$status_int<-ifelse(myData_final$consent_scrnfail==1,
-  #                                   "Screen Fail", 
-  #                                 ifelse(is.na(myData_final$with_inelig_choice)  & myData_final$consent_scrnfail==0,
+  # myData_final$status_int<-ifelse(is.na(myData_final$with_inelig_choice) & myData_final$consent_scrnfail==0,
   #                                   "Actively Enrolled",
-  #                                   ifelse(myData_final$with_inelig_choice==1,
+  #                               ifelse(is.na(myData_final$consent_scrnfail) & myData_final$with_inelig_choice==1,
   #                                     "Study Withdrawal",
-  #                                     ifelse(myData_final$with_inelig_choice==2,
-  #                                       "Study Ineligibility",
-  #                                       ifelse(myData_final$with_inelig_choice==3,
-  #                                         "Participant Death",NA)))))
+  #                                     ifelse(myData_final$consent_scrnfail==0 & myData_final$with_inelig_choice==1,
+  #                                            "Study Withdrawal",
+  #                                           ifelse(myData_final$consent_scrnfail==1,
+  #                                                  "Screen Fail",
+  #                                                  ifelse(myData_final$with_inelig_choice==2,
+  #                                                          "Study Ineligibility",
+  #                                                         ifelse(myData_final$with_inelig_choice==3,
+  #                                                                 "Participant Death",NA))))))
+  
+  myData_final$status_int<-ifelse(myData_final$consent_scrnfail==1,
+                                    "Screen Fail",
+                                  ifelse(is.na(myData_final$with_inelig_choice)  & myData_final$consent_scrnfail==0,
+                                    "Actively Enrolled",
+                                    ifelse(myData_final$with_inelig_choice==1 & myData_final$withd_consen_yesno==1,
+                                      "Consent Withdrawn",
+                                      ifelse(myData_final$with_inelig_choice==1 & myData_final$withd_consen_yesno==0,
+                                        "LTFU",
+                                        ifelse(myData_final$with_inelig_choice==2,
+                                          "Study Ineligibility",
+                                          ifelse(myData_final$with_inelig_choice==3,
+                                            "Participant Death",NA))))))
   
   myData_final$complete_study <- ifelse(is.na(myData_final$head_visit_comp_fu) | myData_final$head_visit_comp_fu==0,0,1)
   myData_final$status <- ifelse(myData_final$complete_study==1,"Completed Study",myData_final$status_int)
