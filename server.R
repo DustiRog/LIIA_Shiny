@@ -80,11 +80,11 @@ shinyServer(function(input,output,session) {
         
         
         ##Creating the table for output
-        visit_table <- data.frame(matrix(data=NA,nrow=15,ncol=2))
+        visit_table <- data.frame(matrix(data=NA,nrow=17,ncol=2))
         colnames(visit_table) <- c("","Number Participants")
-        visit_table[,1] <- c("-Baseline-","Screened, No LP","Screened, LP, Not Finished","Baseline Visit Completed",
-                             "-Follow-Up-","F/U Started, Not Complete","F/U Completed w/ LP","F/U Completed w/o LP",
-                             "-Withdrawn-"," -Entire Study-","Consent Withdrawn","Lost to F/U","-Post-Baseline-","Consent Withdrawn","Lost to F/U")
+        visit_table[,1] <- c("Baseline","Screened, No LP","Screened, LP, Not Finished","Baseline Visit Completed",
+                             ," ","Follow-Up","F/U Started, Not Complete","F/U Completed w/ LP","F/U Completed w/o LP"," ",
+                             "Withdrawn"," Entire Study","Consent Withdrawn","Lost to F/U","Post-Baseline","Consent Withdrawn","Lost to F/U")
         
         #Baseline
         visit_table[1,2] <- "---"
@@ -95,33 +95,31 @@ shinyServer(function(input,output,session) {
         #Baseline Visit Completed
         visit_table[4,2] <- as.numeric(table(data$base_visit_comp)["Yes"])
         
+        visit_table[5,2] <- " "
         #Followup
-        visit_table[5,2] <- "---"
-        # #Withdrawn
-        # visit_table[6,2] <- as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study") & data$status=="Study Withdrawal",]$base_visit_comp)["Yes"])
-        # #Lost to F/U
-        # visit_table[7,2] <- as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study", "Study Withdrawal"),]$base_visit_comp)["Yes"])
+        visit_table[6,2] <- "---"
         #F/U Started, Not Complete
-        visit_table[6,2] <- as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Started, Not Complete"])
+        visit_table[7,2] <- as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Started, Not Complete"])
         #F/U compelted w/ LP
-        visit_table[7,2] <- as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Completed w/ LP"])
+        visit_table[8,2] <- as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Completed w/ LP"])
         #F/U compelted w/o LP
-        visit_table[8,2] <- as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Completed w/o LP"])
+        visit_table[9,2] <- as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Completed w/o LP"])
         
+        visit_table[10,2] <- " "
         #Withdrawn
-        visit_table[9,2] <- "---"
+        visit_table[11,2] <- "---"
         #Entire Study
-        visit_table[10,2] <- "---"
+        visit_table[12,2] <- "---"
         #Consent Withdrawn
-        visit_table[11,2] <- as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study") & data$withd_consen_yesno=="1",]$base_visit_comp)["Yes"])
+        visit_table[13,2] <- as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study") & data$withd_consen_yesno=="1",]$base_visit_comp)["Yes"])
         #Lost to F/U
-        visit_table[12,2] <- as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study") & data$withd_consen_yesno=="0",]$base_visit_comp)["Yes"])
+        visit_table[14,2] <- as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study") & data$withd_consen_yesno=="0",]$base_visit_comp)["Yes"])
         #Post- Baseline
-        visit_table[13,2] <- "---"
+        visit_table[15,2] <- "---"
         #Consent Withdrawn
-        visit_table[14,2] <- as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study") & data$withd_consen_yesno=="1",]$fu_class)["Yes"])
+        visit_table[16,2] <- as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study") & data$withd_consen_yesno=="1",]$fu_class)["Yes"])
         #Lost to F/U
-        visit_table[15,2] <- as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study") & data$withd_consen_yesno=="0",]$fu_class)["Yes"])
+        visit_table[17,2] <- as.numeric(table(data[data$status %notin% c("Actively Enrolled","Completed Study") & data$withd_consen_yesno=="0",]$fu_class)["Yes"])
         
         data <- visit_table
         
