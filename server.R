@@ -83,7 +83,7 @@ shinyServer(function(input,output,session) {
         visit_table <- data.frame(matrix(data=NA,nrow=17,ncol=2))
         colnames(visit_table) <- c("","Number Participants")
         visit_table[,1] <- c("Baseline","Screened, No LP","Screened, LP, Not Finished","Baseline Visit Completed",
-                             ," ","Follow-Up","F/U Started, Not Complete","F/U Completed w/ LP","F/U Completed w/o LP"," ",
+                             " ","Follow-Up","F/U Started, Not Complete","F/U Completed w/ LP","F/U Completed w/o LP"," ",
                              "Withdrawn"," Entire Study","Consent Withdrawn","Lost to F/U","Post-Baseline","Consent Withdrawn","Lost to F/U")
         
         #Baseline
