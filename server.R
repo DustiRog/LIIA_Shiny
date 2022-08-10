@@ -120,7 +120,7 @@ shinyServer(function(input,output,session) {
         visit_df[nrow(visit_df)+1,]=  c("F/U compelted w/ LP", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Completed w/ LP"]))
         visit_df[nrow(visit_df)+1,]=  c("F/U compelted w/o LP", as.numeric(table(data[data$status=="Actively Enrolled" | data$status=="Completed Study",]$fu_class)["F/U Completed w/o LP"]))
         
-        data = visit_df %>%
+        data = visit_table %>%
           kable("html", col.names = c(" ","Number Participants"), align = "r") %>%
           kable_classic() %>%
           pack_rows(group_label = "Baseline", start_row = 1, end_row = 3, indent = F) %>%
