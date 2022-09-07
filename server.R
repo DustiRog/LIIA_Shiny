@@ -175,7 +175,8 @@ shinyServer(function(input,output,session) {
       # demographics
       if(input$type_report=="Demographics"){
         data %<>%
-          filter(status=="Actively Enrolled"  | status == "Completed Study") %>%
+          #filter(status=="Actively Enrolled"  | status == "Completed Study") %>%
+          filter(base_class=="Baseline Visit Completed")
           select("curr_age","demo_sex","demo_ethnicity","demo_handedness","demo_educ_yrs",
                  "demo_race_Asian","demo_race_Black","demo_race_Cauc","demo_race_PacIsl",
                  "demo_race_NatAmer","demo_race_Unkn","demo_race_NoAns")
