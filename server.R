@@ -188,8 +188,7 @@ shinyServer(function(input,output,session) {
           #        "demo_race_Asian","demo_race_Black","demo_race_Cauc","demo_race_PacIsl",
           #        "demo_race_NatAmer","demo_race_Unkn","demo_race_NoAns")
           
-          select("curr_age","demo_sex","demo_ethnicity","demo_handedness","demo_educ_yrs",
-                 "demo_race_final")
+          select("curr_age","demo_sex","demo_ethnicity","demo_handedness","demo_educ_yrs", "demo_race_final")
         ## Vector of variables to summarize - overall
         # myVars<-c("curr_age","demo_educ_yrs","demo_ethnicity","demo_handedness",
         #                 "demo_race_Asian","demo_race_Black","demo_race_Cauc","demo_race_PacIsl",
@@ -198,33 +197,43 @@ shinyServer(function(input,output,session) {
         myVars<-c("curr_age","demo_educ_yrs","demo_ethnicity","demo_handedness",
                   "demo_race_final")
         
+        data_r = data
+        data = data_r
+        lbls=c("Current Age (mean (SD))","Sex", "Education Years (mean (SD))",
+               "Ethnicity","Handedness", "Race")
+        
+        data = setNames(data, lbls)
+        ## Create a TableOne object
+        tabone_overall<-CreateTableOne(data=data,test=FALSE, strata = "Sex", addOverall = T)
+        #tabone_overall_frame<-print(tabone_overall,showAllLevels=TRUE,test=FALSE)
+        data = as.data.frame(tabone_overall)
         
         ## Create a TableOne object
-        tabone_overall<-CreateTableOne(vars=myVars,data=data,test=FALSE)
-        tabone_overall_frame<-print(tabone_overall,showAllLevels=TRUE,test=FALSE)
-        row_nms_overall<-rownames(tabone_overall_frame)
-        tabone_overall_final<-cbind(row_nms_overall,as.data.frame(tabone_overall_frame))
-        rownames(tabone_overall_final)<-c()
-        names(tabone_overall_final)[names(tabone_overall_final)=="row_nms"]<-""
-        
-        tabone_bysex<-CreateTableOne(vars=myVars,strata="demo_sex",data=data,test=FALSE)
-        tabone_bysex_frame<-print(tabone_bysex,showAllLevels=TRUE,test=FALSE)
-        row_nms_bysex<-rownames(tabone_bysex_frame)
-        tabone_bysex_final<-cbind(row_nms_bysex,as.data.frame(tabone_bysex_frame))
-        rownames(tabone_bysex_final)<-c()
-        names(tabone_bysex_final)[names(tabone_bysex_final)=="row_nms"]<-""
-        
-        
-        tabone_combined<-cbind(tabone_overall_final,tabone_bysex_final[,3:4])
-        colnames(tabone_combined)<-c("Variable Name","Variable Level","Overall","Female Sex","Male Sex")
-        tabone_combined[,1]<-c("n","Current Age (mean (SD))","Education Years (mean (SD))",
-                                "Ethnicity (%)","","","","Handedness (%)","","","","Asian Race (%)",
-                                "","Black or African American Race (%)","","White or Caucasian Race (%)",
-                                "","Native Hawaiian or Pacific Islander Race (%)","",
-                                "Alaska Native or American Indian Race (%)","","Unknown Race (%)","",
-                                "Prefer not to Answer Race (%)","")
-        tabone_combined<-tabone_combined[tabone_combined$`Variable Level` %notin% c("No","Prefer not to Answer"),]
-        data<-tabone_combined
+        # tabone_overall<-CreateTableOne(vars=myVars,data=data,test=FALSE)
+        # tabone_overall_frame<-print(tabone_overall,showAllLevels=TRUE,test=FALSE)
+        # row_nms_overall<-rownames(tabone_overall_frame)
+        # tabone_overall_final<-cbind(row_nms_overall,as.data.frame(tabone_overall_frame))
+        # rownames(tabone_overall_final)<-c()
+        # names(tabone_overall_final)[names(tabone_overall_final)=="row_nms"]<-""
+        # 
+        # tabone_bysex<-CreateTableOne(vars=myVars,strata="demo_sex",data=data,test=FALSE)
+        # tabone_bysex_frame<-print(tabone_bysex,showAllLevels=TRUE,test=FALSE)
+        # row_nms_bysex<-rownames(tabone_bysex_frame)
+        # tabone_bysex_final<-cbind(row_nms_bysex,as.data.frame(tabone_bysex_frame))
+        # rownames(tabone_bysex_final)<-c()
+        # names(tabone_bysex_final)[names(tabone_bysex_final)=="row_nms"]<-""
+        # 
+        # 
+        # tabone_combined<-cbind(tabone_overall_final,tabone_bysex_final[,3:4])
+        # colnames(tabone_combined)<-c("Variable Name","Variable Level","Overall","Female Sex","Male Sex")
+        # tabone_combined[,1]<-c("n","Current Age (mean (SD))","Education Years (mean (SD))",
+        #                         "Ethnicity (%)","","","","Handedness (%)","","","","Asian Race (%)",
+        #                         "","Black or African American Race (%)","","White or Caucasian Race (%)",
+        #                         "","Native Hawaiian or Pacific Islander Race (%)","",
+        #                         "Alaska Native or American Indian Race (%)","","Unknown Race (%)","",
+        #                         "Prefer not to Answer Race (%)","")
+        # tabone_combined<-tabone_combined[tabone_combined$`Variable Level` %notin% c("No","Prefer not to Answer"),]
+        # data<-tabone_combined
       }
     })
     data
