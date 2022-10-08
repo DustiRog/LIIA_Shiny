@@ -183,30 +183,28 @@ shinyServer(function(input,output,session) {
         
         data %<>%
           #filter(status=="Actively Enrolled"  | status == "Completed Study") %>%
-          filter(base_class=="Baseline Visit Completed" & data$consent_yesno=="1")
+          filter(base_class=="Baseline Visit Completed" & data$consent_yesno=="1") %>%
+          select("curr_age","demo_sex","demo_ethnicity","demo_handedness","demo_educ_yrs", "demo_race_final")
           # select("curr_age","demo_sex","demo_ethnicity","demo_handedness","demo_educ_yrs",
           #        "demo_race_Asian","demo_race_Black","demo_race_Cauc","demo_race_PacIsl",
           #        "demo_race_NatAmer","demo_race_Unkn","demo_race_NoAns")
           
-          select("curr_age","demo_sex","demo_ethnicity","demo_handedness","demo_educ_yrs", "demo_race_final")
+          
         ## Vector of variables to summarize - overall
         # myVars<-c("curr_age","demo_educ_yrs","demo_ethnicity","demo_handedness",
         #                 "demo_race_Asian","demo_race_Black","demo_race_Cauc","demo_race_PacIsl",
         #                 "demo_race_NatAmer","demo_race_Unkn","demo_race_NoAns")
         
-        myVars<-c("curr_age","demo_educ_yrs","demo_ethnicity","demo_handedness",
-                  "demo_race_final")
+        myVars<-c("curr_age","demo_educ_yrs","demo_ethnicity","demo_handedness", "demo_race_final")
         
-        data_r = data
-        data = data_r
-        lbls=c("Current Age (mean (SD))","Sex", "Education Years (mean (SD))",
-               "Ethnicity","Handedness", "Race")
-        
-        data = setNames(data, lbls)
         ## Create a TableOne object
-        tabone_overall<-CreateTableOne(data=data,test=FALSE, strata = "Sex", addOverall = T)
-        #tabone_overall_frame<-print(tabone_overall,showAllLevels=TRUE,test=FALSE)
-        data = as.data.frame(tabone_overall)
+        tabone_overall<-CreateTableOne(data=data,vars=myVars,test=FALSE, strata = "demo_sex", addOverall = T)
+        tabone_overall_frame<-print(tabone_overall,showAllLevels=TRUE,test=FALSE)
+        data = as.data.frame(tabone_overall_frame) %>% select(-"Prefer not to Answer")
+        data=cbind(c("n","Current Age (mean (SD))", "Education Years (mean (SD))","Ethnicity (%)","","","","Handedness (%)","","","", "Race (%)","","","",""),data)
+        rownames(data) <- NULL
+        colnames(data)<-c("Variable Name","Variable Level","Overall","Female Sex","Male Sex")
+        
         
         ## Create a TableOne object
         # tabone_overall<-CreateTableOne(vars=myVars,data=data,test=FALSE)
