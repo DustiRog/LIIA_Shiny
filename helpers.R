@@ -33,7 +33,7 @@ getData<-function(redcap_api_token) {
                       "demo_email","demo_sex","demo_race___0","demo_race___1","demo_race___2",
                       "demo_race___3","demo_race___4","demo_race___5","demo_race___9",
                       "demo_ethnicity","demo_handedness","demo_educ_yrs","with_inelig_choice","withd_consen_yesno", 
-                      "with_inelig_dthdte","with_inelig_detail")
+                      "with_inelig_yesno", "with_inelig_dthdte","with_inelig_detail")
   
   # Records event: demographics and withdrawal/ineligibility
   rec_myData<-myData[records_keepVars]
@@ -155,6 +155,19 @@ getData<-function(redcap_api_token) {
   myData_merge$demo_handedness<- factor(myData_merge$demo_handedness,levels=c("Right","Left","Ambidextrous",
                                                                               "Prefer not to Answer"))
   
+  
+  #Create different race variable for use in NIH and COMIRB demographics
+  #dataframe of all race columns, sum columns if >1 then more than one race, o.w . check which column is 1 and assign accordingly
+  myData_merge$num_race <- select(myData_merge,starts_with('demo_race__')) %>% rowSums()
+  myData_merge$demo_race_final <- ifelse(myData_merge$num_race>1,"More than one race",
+                                         ifelse(myData_merge$num_race==1 & myData_merge$demo_race___0==1,"Native American",
+                                                ifelse(myData_merge$num_race==1 & myData_merge$demo_race___1==1,"Asian",
+                                                       ifelse(myData_merge$num_race==1 & myData_merge$demo_race___2==1,"Black",
+                                                              ifelse(myData_merge$num_race==1 & myData_merge$demo_race___3==1,"White",
+                                                                     ifelse(myData_merge$num_race==1 & myData_merge$demo_race___4==1,"Pacific Islander",
+                                                                            ifelse(myData_merge$num_race==1 & (myData_merge$demo_race___5==1 | myData_merge$demo_race___9==1),"Unknown",
+                                                                                   ifelse(myData_merge$num_race==0,"Not Reported",NA))))))))
+  
   # Creating new race categories
   myData_merge$demo_race_NatAmer<-factor(ifelse(myData_merge$demo_race___0==1,"Yes","No"),levels=c("Yes","No"))
   myData_merge$demo_race_Asian<-factor(ifelse(myData_merge$demo_race___1==1,"Yes","No"),levels=c("Yes","No"))
@@ -163,7 +176,7 @@ getData<-function(redcap_api_token) {
   myData_merge$demo_race_PacIsl<-factor(ifelse(myData_merge$demo_race___4==1,"Yes","No"),levels=c("Yes","No"))
   myData_merge$demo_race_Unkn<-factor(ifelse(myData_merge$demo_race___5==1,"Yes","No"),levels=c("Yes","No"))
   myData_merge$demo_race_NoAns<-factor(ifelse(myData_merge$demo_race___9==1,"Yes","No"),levels=c("Yes","No"))
-  
+
   # Numeric to yes/no optional measures consent
   myData_merge$consent_audio_rp<-ifelse(myData_merge$consent_audio_rp==1,"Yes",
                                         ifelse(myData_merge$consent_audio_rp==0,"No",NA))

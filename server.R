@@ -49,8 +49,14 @@ shinyServer(function(input,output,session) {
     input$updateBtn
     
     data<-LIIA_data()
-
-    #data = getData("3BC70D3524865A2E128982CCCC993182")
+    
+    ####working ideas
+    # data = getData("")
+    # data %>%
+    #   filter(with_inelig_yesno == 1 & consent_scrnfail == 0) %>%
+    #   select(study_id)
+    # 
+    
     # Add all the filters to the data based on the user inputs
     # Wrap in an isolate() so that the data won't update every time an input is changed
     isolate({
@@ -174,16 +180,24 @@ shinyServer(function(input,output,session) {
       # For actively enrolled participants or those who completed the study, a table 1 of study
       # demographics
       if(input$type_report=="Demographics"){
-        data %<>%
-          filter(status=="Actively Enrolled"  | status == "Completed Study") %>%
-          select("curr_age","demo_sex","demo_ethnicity","demo_handedness","demo_educ_yrs",
-                 "demo_race_Asian","demo_race_Black","demo_race_Cauc","demo_race_PacIsl",
-                 "demo_race_NatAmer","demo_race_Unkn","demo_race_NoAns")
         
+        data %<>%
+          #filter(status=="Actively Enrolled"  | status == "Completed Study") %>%
+          filter(base_class=="Baseline Visit Completed" & data$consent_yesno=="1")
+          # select("curr_age","demo_sex","demo_ethnicity","demo_handedness","demo_educ_yrs",
+          #        "demo_race_Asian","demo_race_Black","demo_race_Cauc","demo_race_PacIsl",
+          #        "demo_race_NatAmer","demo_race_Unkn","demo_race_NoAns")
+          
+          select("curr_age","demo_sex","demo_ethnicity","demo_handedness","demo_educ_yrs",
+                 "demo_race_final")
         ## Vector of variables to summarize - overall
+        # myVars<-c("curr_age","demo_educ_yrs","demo_ethnicity","demo_handedness",
+        #                 "demo_race_Asian","demo_race_Black","demo_race_Cauc","demo_race_PacIsl",
+        #                 "demo_race_NatAmer","demo_race_Unkn","demo_race_NoAns")
+        
         myVars<-c("curr_age","demo_educ_yrs","demo_ethnicity","demo_handedness",
-                        "demo_race_Asian","demo_race_Black","demo_race_Cauc","demo_race_PacIsl",
-                        "demo_race_NatAmer","demo_race_Unkn","demo_race_NoAns")
+                  "demo_race_final")
+        
         
         ## Create a TableOne object
         tabone_overall<-CreateTableOne(vars=myVars,data=data,test=FALSE)
