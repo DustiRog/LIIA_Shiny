@@ -51,7 +51,7 @@ shinyServer(function(input,output,session) {
     data<-LIIA_data()
     
     ####working ideas
-    # data = getData("3BC70D3524865A2E128982CCCC993182")
+    # data = getData("")
     # data %>%
     #   filter(with_inelig_yesno == 1 & consent_scrnfail == 0) %>%
     #   select(study_id)
@@ -80,9 +80,10 @@ shinyServer(function(input,output,session) {
           filter(status == "Actively Enrolled")
       }
       
+      #Creates a table of ids and consent times/form
       if(input$type_report=="Consent Metrics"){
         data %<>%
-          select("study_id","consent_version","consent_date_agg")
+          select("study_id","consent_vers_agg","consent_date_agg")
       }
       
       # Creates a table of actively enrolled participants (or those who have completed the study) with their

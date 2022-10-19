@@ -33,7 +33,11 @@ getData<-function(redcap_api_token) {
                       "demo_email","demo_sex","demo_race___0","demo_race___1","demo_race___2",
                       "demo_race___3","demo_race___4","demo_race___5","demo_race___9",
                       "demo_ethnicity","demo_handedness","demo_educ_yrs","with_inelig_choice","withd_consen_yesno", 
-                      "with_inelig_yesno", "with_inelig_dthdte","with_inelig_detail","consent_version", "consent_date_apr19",
+                      "with_inelig_yesno", "with_inelig_dthdte","with_inelig_detail","consent_version___0", "consent_version___1", 
+                      "consent_version___2", "consent_version___3", "consent_version___4", "consent_version___5", "consent_date_apr19", 
+                      "consent_date_aug19", "consent_date_aug17_prior", "consent_date_aug17_post", "consent_date_apr12_prior", 
+                      "consent_date_apr12_post", "consent_time_apr19", "consent_time_aug19", "consent_time_aug17_prior", "consent_time_aug17_post", 
+                      "consent_time_apr12_prior", "consent_time_apr12_post", "consent_date_apr19",
                       "consent_date_aug19","consent_date_aug17_prior","consent_date_aug17_post", "consent_date_apr12_prior",
                       "consent_date_apr12_post","consent_time_apr19","consent_time_aug19","consent_time_aug17_prior",
                       "consent_time_aug17_post","consent_time_apr12_prior","consent_time_apr12_post")
@@ -293,6 +297,8 @@ getData<-function(redcap_api_token) {
   #Get consent dates and version, stack all consent dates in 1 with an coalesce
   myData_final$consent_date_agg = coalesce("consent_date_apr19", "consent_date_aug19","consent_date_aug17_prior","consent_date_aug17_post", "consent_date_apr12_prior",
                                            "consent_date_apr12_post","consent_time_apr19","consent_time_aug19","consent_time_aug17_prior", "consent_time_aug17_post","consent_time_apr12_prior","consent_time_apr12_post")
+  
+  myData_final$consent_vers_agg= coalesce("consent_version___0", "consent_version___1", "consent_version___2", "consent_version___3", "consent_version___4", "consent_version___5", "consent_date_apr19", "consent_date_aug19", "consent_date_aug17_prior", "consent_date_aug17_post", "consent_date_apr12_prior", "consent_date_apr12_post", "consent_time_apr19", "consent_time_aug19", "consent_time_aug17_prior", "consent_time_aug17_post", "consent_time_apr12_prior", "consent_time_apr12_post")
   # Final dataset
   myData_final
 }
