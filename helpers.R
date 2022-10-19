@@ -9,6 +9,7 @@ getData<-function(redcap_api_token) {
   # Create the REDCap connection using the API Token provided
   Sys.setenv(REDCap_API_URI = "https://redcap.ucdenver.edu/api/")
   Sys.setenv(REDCap_API_TOKEN = as.character(redcap_api_token))
+  
 
   # Patch until REDCapExporter can be updated and pushed to CRAN.
   h <- curl::new_handle()
@@ -36,17 +37,21 @@ getData<-function(redcap_api_token) {
                       "with_inelig_yesno", "with_inelig_dthdte","with_inelig_detail","consent_version___0", "consent_version___1", 
                       "consent_version___2", "consent_version___3", "consent_version___4", "consent_version___5", "consent_date_apr19", 
                       "consent_date_aug19", "consent_date_aug17_prior", "consent_date_aug17_post", "consent_date_apr12_prior", 
-                      "consent_date_apr12_post", "consent_time_apr19", "consent_time_aug19", "consent_time_aug17_prior", "consent_time_aug17_post", 
-                      "consent_time_apr12_prior", "consent_time_apr12_post", "consent_date_apr19",
-                      "consent_date_aug19","consent_date_aug17_prior","consent_date_aug17_post", "consent_date_apr12_prior",
-                      "consent_date_apr12_post","consent_time_apr19","consent_time_aug19","consent_time_aug17_prior",
-                      "consent_time_aug17_post","consent_time_apr12_prior","consent_time_apr12_post")
+                      "consent_date_apr12_post")
+
   
   # Records event: demographics and withdrawal/ineligibility
   rec_myData<-myData[records_keepVars]
   
+  
+  #put NAs for empty cells and since demo data exists on separate line of multiple study id lines, fill in before dropping on demos
   rec_myData<-rec_myData %>% 
-    mutate_all(na_if,"")
+    mutate_all(na_if,"") %>%
+    group_by(study_id) %>%
+    fill("consent_version___0", "consent_version___1", 
+         "consent_version___2", "consent_version___3", "consent_version___4", "consent_version___5", "consent_date_apr19", 
+         "consent_date_aug19", "consent_date_aug17_prior", "consent_date_aug17_post", "consent_date_apr12_prior", 
+         "consent_date_apr12_post", .direction = "up")
   
   rec_myData<-rec_myData %>% 
     drop_na(study_id,demo_first_name,demo_last_name)
@@ -295,10 +300,17 @@ getData<-function(redcap_api_token) {
                                                               ifelse(myData_final$next_appt=="Overdue 2 Year Follow Up" & is.na(myData_final$head_day1_date_fu),"Overdue 2 Year Follow Up",NA)))))
   
   #Get consent dates and version, stack all consent dates in 1 with an coalesce
-  myData_final$consent_date_agg = coalesce("consent_date_apr19", "consent_date_aug19","consent_date_aug17_prior","consent_date_aug17_post", "consent_date_apr12_prior",
-                                           "consent_date_apr12_post","consent_time_apr19","consent_time_aug19","consent_time_aug17_prior", "consent_time_aug17_post","consent_time_apr12_prior","consent_time_apr12_post")
+  myData_final$consent_date_agg = coalesce(myData_final$consent_date_apr19, myData_final$consent_date_aug19, myData_final$consent_date_aug17_prior, myData_final$consent_date_aug17_post, 
+                                           myData_final$consent_date_apr12_prior, myData_final$consent_date_apr12_post)
   
-  myData_final$consent_vers_agg= coalesce("consent_version___0", "consent_version___1", "consent_version___2", "consent_version___3", "consent_version___4", "consent_version___5", "consent_date_apr19", "consent_date_aug19", "consent_date_aug17_prior", "consent_date_aug17_post", "consent_date_apr12_prior", "consent_date_apr12_post", "consent_time_apr19", "consent_time_aug19", "consent_time_aug17_prior", "consent_time_aug17_post", "consent_time_apr12_prior", "consent_time_apr12_post")
+  myData_final$consent_vers_agg= case_when(myData_final$consent_version___0 ==1 ~ "11 April 2019",
+                                           myData_final$consent_version___1 ==1 ~ "27 August 2019",
+                                           myData_final$consent_version___2 ==1 ~ "17 August 2020 (enrolled prior to July 2020)",
+                                           myData_final$consent_version___3 ==1 ~ "17 August 2020 (enrolled after July 2020)",
+                                           myData_final$consent_version___4 ==1 ~ "12 April 2021 (enrolled prior to July 2020)",
+                                           myData_final$consent_version___5 ==1 ~ "12 April 2021 (enrolled after July 2020)")
+    
+  
   # Final dataset
   myData_final
 }
