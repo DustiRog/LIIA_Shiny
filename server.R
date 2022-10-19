@@ -82,7 +82,7 @@ shinyServer(function(input,output,session) {
       
       #Creates a table of ids and consent times/form
       if(input$type_report=="Consent Metrics"){
-        data %>%
+        data %<>%
           select("study_id","consent_vers_agg","consent_date_agg")
       }
       
