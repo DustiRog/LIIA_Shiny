@@ -83,7 +83,8 @@ shinyServer(function(input,output,session) {
       #Creates a table of ids and consent times/form
       if(input$type_report=="Consent Metrics"){
         data %<>%
-          select("study_id","consent_vers_agg","consent_date_agg")
+          select("study_id","consent_vers_agg","consent_date_agg") %>%
+          dplyr::rename("id" =study_id, "First Consent Version" = consent_vers_agg, "First Consent Date" = consent_date_agg)
       }
       
       # Creates a table of actively enrolled participants (or those who have completed the study) with their
