@@ -33,7 +33,10 @@ getData<-function(redcap_api_token) {
                       "demo_email","demo_sex","demo_race___0","demo_race___1","demo_race___2",
                       "demo_race___3","demo_race___4","demo_race___5","demo_race___9",
                       "demo_ethnicity","demo_handedness","demo_educ_yrs","with_inelig_choice","withd_consen_yesno", 
-                      "with_inelig_yesno", "with_inelig_dthdte","with_inelig_detail")
+                      "with_inelig_yesno", "with_inelig_dthdte","with_inelig_detail","consent_version", "consent_date_apr19",
+                      "consent_date_aug19","consent_date_aug17_prior","consent_date_aug17_post", "consent_date_apr12_prior",
+                      "consent_date_apr12_post","consent_time_apr19","consent_time_aug19","consent_time_aug17_prior",
+                      "consent_time_aug17_post","consent_time_apr12_prior","consent_time_apr12_post")
   
   # Records event: demographics and withdrawal/ineligibility
   rec_myData<-myData[records_keepVars]
@@ -287,6 +290,9 @@ getData<-function(redcap_api_token) {
                                                        ifelse(myData_final$next_appt=="2 Year Follow Up" & is.na(myData_final$head_day1_date_fu),"2 Year Follow Up",
                                                               ifelse(myData_final$next_appt=="Overdue 2 Year Follow Up" & is.na(myData_final$head_day1_date_fu),"Overdue 2 Year Follow Up",NA)))))
   
+  #Get consent dates and version, stack all consent dates in 1 with an coalesce
+  myData_final$consent_date_agg = coalesce("consent_date_apr19", "consent_date_aug19","consent_date_aug17_prior","consent_date_aug17_post", "consent_date_apr12_prior",
+                                           "consent_date_apr12_post","consent_time_apr19","consent_time_aug19","consent_time_aug17_prior", "consent_time_aug17_post","consent_time_apr12_prior","consent_time_apr12_post")
   # Final dataset
   myData_final
 }

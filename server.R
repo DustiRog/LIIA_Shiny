@@ -51,11 +51,11 @@ shinyServer(function(input,output,session) {
     data<-LIIA_data()
     
     ####working ideas
-    # data = getData("")
+    # data = getData("3BC70D3524865A2E128982CCCC993182")
     # data %>%
     #   filter(with_inelig_yesno == 1 & consent_scrnfail == 0) %>%
     #   select(study_id)
-    # 
+    # colnames(data)
     
     # Add all the filters to the data based on the user inputs
     # Wrap in an isolate() so that the data won't update every time an input is changed
@@ -79,7 +79,12 @@ shinyServer(function(input,output,session) {
           select("study_id","demo_first_name","demo_last_name","status") %>%
           filter(status == "Actively Enrolled")
       }
-      data$with_inelig_choice
+      
+      if(input$type_report=="Consent Metrics"){
+        data %<>%
+          select("study_id","consent_version","consent_date_agg")
+      }
+      
       # Creates a table of actively enrolled participants (or those who have completed the study) with their
       # status within the study, whether it be at baseline or 2yr f/u
       if(input$type_report=="Participant Visit Stats"){
