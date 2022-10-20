@@ -26,8 +26,16 @@ source("helpers.R") # Have the helper functions available
 shinyServer(function(input,output,session) {
   # ======= BUILDING THE DATASET FROM REDCAP ======= #
   
+  observe({
+    shinyjs::hide("consentdate")
+    
+    if(input$type_report=="Consent Metrics")
+      shinyjs::show("consentdate")
+  })
+  
   # Use the REDCap API token input and create initial dataset
   LIIA_data<-reactive({
+    
     
     # Add dependency on the update button (only update when clicked)
     input$goBtn
@@ -82,7 +90,6 @@ shinyServer(function(input,output,session) {
       
       #Creates a table of ids and consent times/form
       if(input$type_report=="Consent Metrics"){
-        input$updateBtn
         
         #put data into a matrix for output with totals
         all_data=
