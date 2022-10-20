@@ -36,8 +36,8 @@ fluidPage(theme=shinythemes::shinytheme("sandstone"),
     mainPanel(
       #downloadButton("downloadData","Download Table"), dateInput("consentdate", "Consent Date>", value = "2010-02-29"),
       downloadButton("downloadData","Download Table"),
-      conditionalPanel(condition='input.location!=null && input.location!=""',
-                       fluidRow(dateInput("consentdate", "Consent Date>", value = "2010-02-29"))),
+      useShinyjs(),
+      dateInput("consentdate", "Consent Date>", value = "2010-02-29"),
       br(),br(),
         
       tableOutput("dataTable")

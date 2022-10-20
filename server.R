@@ -26,17 +26,17 @@ source("helpers.R") # Have the helper functions available
 shinyServer(function(input,output,session) {
   # ======= BUILDING THE DATASET FROM REDCAP ======= #
   
-  observe({
-    shinyjs::hide("consentdate")
-    
-    if(input$type_report=="Consent Metrics")
-      shinyjs::show("consentdate")
-  })
-  
   # Use the REDCap API token input and create initial dataset
   LIIA_data<-reactive({
     
     
+    observe({
+      shinyjs::hide("consentdate")
+      
+      if(input$type_report=="Consent Metrics")
+        shinyjs::show("consentdate")
+    })
+     
     # Add dependency on the update button (only update when clicked)
     input$goBtn
     
