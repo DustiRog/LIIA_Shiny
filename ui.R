@@ -34,7 +34,9 @@ fluidPage(theme=shinythemes::shinytheme("sandstone"),
     
     # Main panel used to display the report and give option for downloading report as a .csv file  
     mainPanel(
-      downloadButton("downloadData","Download Table"), dateInput("consentdate", "Consent Date>", value = "2010-02-29"),
+      #downloadButton("downloadData","Download Table"), dateInput("consentdate", "Consent Date>", value = "2010-02-29"),
+      div(style="display:inline-block",downloadButton("downloadData","Download Table"), style="float:left"),
+      div(style="display:inline-block",dateInput("consentdate", "Consent Date>", value = "2010-02-29"), style="float:right"),
       br(),br(),
         
       tableOutput("dataTable")

@@ -112,6 +112,8 @@ shinyServer(function(input,output,session) {
         #put totals into a matrix
         total_matrix = matrix(c("Total Rows:", "Total NA Rows:",  "", "ID", row_total,  row_total_na, "", "First Consent Version","","","","First Consent Date"), nrow = 4, ncol = 3)
         
+        colnames(total_matrix) = NULL
+        
         #combine matrices
         data = rbind(total_matrix, all_data)
       }
