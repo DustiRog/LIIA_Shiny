@@ -37,7 +37,7 @@ fluidPage(theme=shinythemes::shinytheme("sandstone"),
       #downloadButton("downloadData","Download Table"), dateInput("consentdate", "Consent Date>", value = "2010-02-29"),
       downloadButton("downloadData","Download Table"),
       useShinyjs(),
-      dateInput("consentdate", "Consent Date>", value = "2010-02-29"),
+      dateInput("consentdate", "First Consent Date >", value = "2010-02-29"),
       br(),br(),
         
       tableOutput("dataTable")
