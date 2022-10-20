@@ -34,7 +34,7 @@ fluidPage(theme=shinythemes::shinytheme("sandstone"),
     
     # Main panel used to display the report and give option for downloading report as a .csv file  
     mainPanel(
-      downloadButton("downloadData","Download Table"), Input("datefilter", "Consent Date >"),
+      downloadButton("downloadData","Download Table"), DatePicker.shinyInput("consentdate", value = as.Date('2000-09-24'), label = "Consent Date Filter"),textOutput("dateValue"),
       br(),br(),
         
       tableOutput("dataTable")
