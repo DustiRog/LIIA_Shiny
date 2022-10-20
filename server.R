@@ -251,7 +251,7 @@ shinyServer(function(input,output,session) {
     {
       LIIA_abb()
     },
-    
+    rownames=FALSE
   )
   
   # Allow user to download the data, simply save as .csv file

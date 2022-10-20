@@ -8,7 +8,8 @@
 getData<-function(redcap_api_token) {
   # Create the REDCap connection using the API Token provided
   Sys.setenv(REDCap_API_URI = "https://redcap.ucdenver.edu/api/")
-  Sys.setenv(REDCap_API_TOKEN = as.character(redcap_api_token))
+  #Sys.setenv(REDCap_API_TOKEN = as.character(redcap_api_token))
+  Sys.setenv(REDCap_API_TOKEN = as.character("3BC70D3524865A2E128982CCCC993182"))
   
 
   # Patch until REDCapExporter can be updated and pushed to CRAN.
@@ -300,7 +301,7 @@ getData<-function(redcap_api_token) {
                                                               ifelse(myData_final$next_appt=="Overdue 2 Year Follow Up" & is.na(myData_final$head_day1_date_fu),"Overdue 2 Year Follow Up",NA)))))
   
   #Get consent dates and version, stack all consent dates in 1 with an coalesce
-  myData_final$consent_date_agg = coalesce(myData_final$consent_date_apr19, myData_final$consent_date_aug19, myData_final$consent_date_aug17_prior, myData_final$consent_date_aug17_post, 
+  myData_final$consent_date_agg = dplyr::coalesce(myData_final$consent_date_apr19, myData_final$consent_date_aug19, myData_final$consent_date_aug17_prior, myData_final$consent_date_aug17_post, 
                                            myData_final$consent_date_apr12_prior, myData_final$consent_date_apr12_post)
   
   myData_final$consent_vers_agg= case_when(myData_final$consent_version___0 ==1 ~ "11 April 2019",
