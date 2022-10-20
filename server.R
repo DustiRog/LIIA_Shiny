@@ -30,15 +30,15 @@ shinyServer(function(input,output,session) {
   LIIA_data<-reactive({
     
     
+    # Add dependency on the update button (only update when clicked)
+    input$goBtn
+    
     observe({
       shinyjs::hide("consentdate")
       
       if(input$type_report=="Consent Metrics")
         shinyjs::show("consentdate")
     })
-     
-    # Add dependency on the update button (only update when clicked)
-    input$goBtn
     
     # Create the initial dataset
     getData(as.character(input$API_token))
