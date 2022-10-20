@@ -247,7 +247,7 @@ shinyServer(function(input,output,session) {
   # ======= SHOW DATA IN A TABLE ======= #
   
   # Show the data in a table
-  output$dataTable<-renderDataTable(
+  output$dataTable<-renderTable(
     {
       LIIA_abb()
     },
