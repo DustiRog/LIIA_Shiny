@@ -93,7 +93,7 @@ shinyServer(function(input,output,session) {
           dplyr::rename("id" =study_id, "First Consent Version" = consent_vers_agg, "First Consent Date" = consent_date_agg) %>%
           as.matrix()
         
-        names(all_data) = NULL
+        colnames(all_data) = NULL
         
         #get a row total, including NAs
         row_total =
