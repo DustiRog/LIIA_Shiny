@@ -82,9 +82,12 @@ shinyServer(function(input,output,session) {
       
       #Creates a table of ids and consent times/form
       if(input$type_report=="Consent Metrics"){
+        input$updateBtn
+        
         data %<>%
           select("study_id","consent_vers_agg","consent_date_agg") %>%
-          arrange(consent_date_agg) %>% 
+          arrange(consent_date_agg) %>%
+          filter(consent_date_agg > input$datefilter) %>%
           dplyr::rename("id" =study_id, "First Consent Version" = consent_vers_agg, "First Consent Date" = consent_date_agg) %>% 
           dplyr::mutate("Row Number" = row_number())
       }
