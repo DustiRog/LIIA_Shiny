@@ -84,12 +84,34 @@ shinyServer(function(input,output,session) {
       if(input$type_report=="Consent Metrics"){
         input$updateBtn
         
-        data %<>%
+        #put data into a matrix for output with totals
+        all_data=
+          data %>%
           select("study_id","consent_vers_agg","consent_date_agg") %>%
           arrange(consent_date_agg) %>%
-          filter(consent_date_agg > input$consentdate) %>%
-          dplyr::rename("id" =study_id, "First Consent Version" = consent_vers_agg, "First Consent Date" = consent_date_agg) %>% 
-          dplyr::mutate("Row Number" = row_number())
+          filter(consent_date_agg > input$consentdate | is.na(consent_date_agg)) %>%
+          dplyr::rename("id" =study_id, "First Consent Version" = consent_vers_agg, "First Consent Date" = consent_date_agg) %>%
+          as.matrix()
+        
+        #get a row total, including NAs
+        row_total =
+          data %>%
+          select("study_id","consent_vers_agg","consent_date_agg") %>%
+          filter(consent_date_agg > input$consentdate | is.na(consent_date_agg)) %>%
+          nrow()
+        
+        #get a row total of NAs
+        row_total_na =
+          data %>%
+          select("study_id","consent_vers_agg","consent_date_agg") %>%
+          filter(is.na(consent_date_agg)) %>%
+          nrow()
+        
+        #put totals into a matrix
+        total_matrix = matrix(c("Total Rows:", row_total, "", "Total NA Rows:", row_total_na, "", "","",""), nrow = 3, ncol = 3)
+        
+        #combine matrices
+        data = rbind(total_matrix, all_data)
       }
       
       # Creates a table of actively enrolled participants (or those who have completed the study) with their
