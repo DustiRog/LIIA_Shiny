@@ -8,8 +8,7 @@
 getData<-function(redcap_api_token) {
   # Create the REDCap connection using the API Token provided
   Sys.setenv(REDCap_API_URI = "https://redcap.ucdenver.edu/api/")
-  #Sys.setenv(REDCap_API_TOKEN = as.character(redcap_api_token))
-  Sys.setenv(REDCap_API_TOKEN = as.character("3BC70D3524865A2E128982CCCC993182"))
+  Sys.setenv(REDCap_API_TOKEN = as.character(redcap_api_token))
   
 
   # Patch until REDCapExporter can be updated and pushed to CRAN.
